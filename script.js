@@ -15,6 +15,35 @@ let score = 0;
 
 document.addEventListener("keydown", changeDirection);
 
+// Touch controls
+let touchStartX = 0, touchStartY = 0;
+
+canvas.addEventListener("touchstart", function(event) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+}, false);
+
+canvas.addEventListener("touchmove", function(event) {
+    if (!touchStartX || !touchStartY) return;
+
+    let touchEndX = event.touches[0].clientX;
+    let touchEndY = event.touches[0].clientY;
+
+    let diffX = touchEndX - touchStartX;
+    let diffY = touchEndY - touchStartY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0 && dx === 0) { dx = box; dy = 0; }
+        else if (diffX < 0 && dx === 0) { dx = -box; dy = 0; }
+    } else {
+        if (diffY > 0 && dy === 0) { dx = 0; dy = box; }
+        else if (diffY < 0 && dy === 0) { dx = 0; dy = -box; }
+    }
+
+    touchStartX = 0;
+    touchStartY = 0;
+}, false);
+
 function changeDirection(event) {
     if (event.key === "ArrowUp" && dy === 0) { dx = 0; dy = -box; }
     else if (event.key === "ArrowDown" && dy === 0) { dx = 0; dy = box; }
